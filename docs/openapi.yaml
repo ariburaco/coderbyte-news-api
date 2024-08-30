@@ -1,0 +1,183 @@
+openapi: 3.0.0
+info:
+  title: News API
+  version: 1.0.0
+  description: A simple API to fetch news articles
+servers:
+  - url: http://localhost:4000/api
+paths:
+  /articles:
+    get:
+      summary: Fetch news articles
+      parameters:
+        - in: query
+          name: n
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+            maximum: 100
+          required: false
+          description: Number of news articles to fetch
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          required: false
+          description: Page number for pagination
+      responses:
+        "200":
+          description: List of news articles
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsResponse"
+        "400":
+          description: Bad Request -- Your request is invalid.
+        "401":
+          description: Unauthorized -- Your API key is wrong.
+        "403":
+          description: Forbidden -- You have reached your daily quota.
+        "429":
+          description: Too Many Requests -- You have made more requests per second than you are allowed.
+        "500":
+          description: Internal Server Error -- We had a problem with our server. Try again later.
+  /search:
+    get:
+      summary: Search news articles by keywords
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+          required: true
+          description: Keywords to search for
+        - in: query
+          name: n
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+            maximum: 100
+          required: false
+          description: Number of news articles to fetch
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          required: false
+          description: Page number for pagination
+        - in: query
+          name: lang
+          schema:
+            type: string
+          required: false
+          description: Language code for filtering articles by language
+        - in: query
+          name: country
+          schema:
+            type: string
+          required: false
+          description: Country code for filtering articles by publication country
+        - in: query
+          name: in
+          schema:
+            type: string
+          required: false
+          description: Attributes to search in (e.g., title, description, content)
+        - in: query
+          name: nullable
+          schema:
+            type: string
+          required: false
+          description: Attributes allowed to return null values (e.g., description, content)
+        - in: query
+          name: from
+          schema:
+            type: string
+            format: date-time
+          required: false
+          description: Filter articles from this publication date (e.g., 2024-08-29T22:54:35Z)
+        - in: query
+          name: to
+          schema:
+            type: string
+            format: date-time
+          required: false
+          description: Filter articles to this publication date (e.g., 2024-08-29T22:54:35Z)
+        - in: query
+          name: sortby
+          schema:
+            type: string
+            enum:
+              - publishedAt
+              - relevance
+          default: publishedAt
+          required: false
+          description: Sort by publication date or relevance
+      responses:
+        "200":
+          description: List of matching articles
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsResponse"
+        "400":
+          description: Bad Request -- Your request is invalid.
+        "401":
+          description: Unauthorized -- Your API key is wrong.
+        "403":
+          description: Forbidden -- You have reached your daily quota.
+        "429":
+          description: Too Many Requests -- You have made more requests per second than you are allowed.
+        "500":
+          description: Internal Server Error -- We had a problem with our server. Try again later.
+components:
+  schemas:
+    Article:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Google's Pixel 7 and 7 Pro’s design gets revealed even more with fresh crisp renders"
+        description:
+          type: string
+          example: "Now we have a complete image of what the next Google flagship phones will look like. All that's left now is to welcome them during their October announcement!"
+        content:
+          type: string
+          example: "Google’s highly anticipated upcoming Pixel 7 series is just around the corner, scheduled to be announced on October 6, 2022..."
+        url:
+          type: string
+          format: uri
+          example: "https://www.phonearena.com/news/google-pixel-7-and-pro-design-revealed-even-more-fresh-renders_id142800"
+        image:
+          type: string
+          format: uri
+          example: "https://m-cdn.phonearena.com/images/article/142800-wide-two_1200/Googles-Pixel-7-and-7-Pros-design-gets-revealed-even-more-with-fresh-crisp-renders.jpg"
+        publishedAt:
+          type: string
+          format: date-time
+          example: "2022-09-28T08:14:24Z"
+        source:
+          type: object
+          properties:
+            name:
+              type: string
+              example: "PhoneArena"
+            url:
+              type: string
+              format: uri
+              example: "https://www.phonearena.com"
+
+    NewsResponse:
+      type: object
+      properties:
+        totalArticles:
+          type: integer
+          example: 54904
+        articles:
+          type: array
+          items:
+            $ref: "#/components/schemas/Article"
