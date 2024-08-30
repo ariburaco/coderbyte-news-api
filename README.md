@@ -33,6 +33,11 @@ GNEWS_API_KEY=your_gnews_api_key_here
 
 Ensure that you replace `your_gnews_api_key_here` with your actual GNews API key.
 
+## Live Environment
+
+You can access the live version of the API at [https://coderbyte-news-api.onrender.com/api](https://coderbyte-news-api.onrender.com/api).
+If you want to test the API with Postman, you need to change the base URL to `https://coderbyte-news-api.onrender.com/api`. in the collection.
+
 ## Available Scripts
 
 In the project directory, you can run:
